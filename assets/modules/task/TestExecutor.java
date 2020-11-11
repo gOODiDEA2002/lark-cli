@@ -1,26 +1,24 @@
 package {{.Package}}.executor;
 
-import lark.task.Executor;
-import lark.task.Task;
-import lark.task.TaskContext;
 import {{.Package}}.biz.TestBiz;
-import {{.Package}}.entity.TestObject;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.handler.annotation.XxlJob;
+import com.xxl.job.core.log.XxlJobLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Task
-public class TestExecutor implements Executor {
-    private static final Logger LOGGER= LoggerFactory.getLogger(TestTask.class);
-
+public class TestExecutor {
     @Autowired
-    private TestBiz testBiz;
+    TestBiz testBiz;
 
-    @Override
-    public void execute(TaskContext ctx) {
-        // todo: 添加实现
-        int id = ctx.getArgs().getInt32("id", -1);
-        TestObject object = testBiz.getObject(id);
-        System.out.println(object.getId());
+    @XxlJob("TestHandler")
+    public ReturnT<String> testHandler(String param) throws Exception {
+        int[] userIds = new int[]{123,1,0,124};
+        for (int i = 0, count = userIds.length; i < count; i++) {
+            String result = testBiz.hello( userIds[i] );
+            XxlJobLogger.log("result:{}", result );
+        }
+        return ReturnT.SUCCESS;
     }
 }

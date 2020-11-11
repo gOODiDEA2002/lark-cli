@@ -37,3 +37,7 @@ vendor/
 
 # Test files
 /examples/java
+
+lark
+.factorypath
+.pmdCache

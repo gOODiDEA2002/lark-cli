@@ -1,10 +1,10 @@
 package {{.Package}}.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode
 public class TestObject {
     private int id;
     private String name;

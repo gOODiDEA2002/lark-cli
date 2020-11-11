@@ -3,7 +3,7 @@ package {{.Package}}.constant;
 import lark.core.lang.Description;
 import lark.core.lang.EnumValuable;
 import lark.core.lang.EnumTitlable;
-import lark.core.lang.Enums;
+import lark.core.util.Enums;
 
 @Description("测试类型")
 public enum	TestType implements EnumValuable, EnumTitlable {

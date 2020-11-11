@@ -1,6 +1,6 @@
 package {{.Package}};
 
-import lark.msg.MsgApplication;
+import lark.msg.boot.MsgApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication

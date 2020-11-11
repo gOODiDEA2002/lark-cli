@@ -13,7 +13,7 @@ func main() {
 	config.SetDefaultValue("banner", false)
 	tpl.SetBox(packr.NewBox("./assets"))
 
-	app.Name = "lark"
+	app.Name = "lark-cli"
 	app.Version = "0.9.1"
 	app.Desc = "A tool for developing lark based application"
 	app.Action = cmd.Root

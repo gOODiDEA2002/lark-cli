@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>lark</groupId>
-        <artifactId>lark-starter-task</artifactId>
+        <artifactId>lark-starter-msg-handler</artifactId>
         <version>1.5.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
@@ -14,6 +14,11 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
+        <dependency>
+            <groupId>{{ .GroupID }}</groupId>
+            <artifactId>{{ .CleanArtifactID }}-msg-contract</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>{{ .GroupID }}</groupId>
             <artifactId>{{ .CleanArtifactID }}-service-contract</artifactId>

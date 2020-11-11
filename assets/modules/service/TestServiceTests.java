@@ -1,24 +1,27 @@
 package {{.Package}};
 
-import {{.Package}}.constant.TestType;
-import {{.Package}}.dto.TestDto;
-import {{.Package}}.iface.TestService;
+import {{.Package}}.contract.constant.TestType;
+import {{.Package}}.contract.dto.TestDto;
+import {{.Package}}.contract.iface.TestService;
 import org.junit.Test;
+import org.junit.Assert;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Bootstrap.class)
 public class TestServiceTests {
     @Autowired
     private TestService testService;
 
     @Test
-    public void testHello() throws Exception {
+    public void testHello() {
         TestDto.HelloRequest request = new TestDto.HelloRequest();
         request.setId(123);
-        request.setType(TestType.GOOD);
-        request.setTime(LocalDateTime.now());
 
         TestDto.HelloResponse response = testService.hello(request);
-        printJsonln(response);
+        Assert.assertSame(TestType.GOOD, response.getType() );
     }
 }

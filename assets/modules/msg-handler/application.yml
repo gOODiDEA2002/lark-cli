@@ -3,16 +3,11 @@ spring:
     name: {{.ArtifactID}}
 
 server:
-  port: 3001
-
-lark:
-  project:
-    type: service
+  port: 5001
 
 ---
 spring:
   profiles: default
-  
   cloud:
     nacos:
       discovery:
@@ -40,3 +35,7 @@ rocketmq:
   name-server: lark-dep-env.foo.com:9876
   producer:
     group: {{.ArtifactID}}
+
+message:
+  test:
+    consumer: {{.ArtifactID}}

@@ -3,11 +3,11 @@ spring:
     name: {{.ArtifactID}}
 
 server:
-  port: 3001
+  port: 1001
 
 lark:
   project:
-    type: service
+    type: api
 
 ---
 spring:
