@@ -1,0 +1,38 @@
+include:
+  - project: 'devops/ci-templates'
+    file: '/build/java.build.gitlab-ci.yml'
+  - project: 'devops/ci-templates'
+    file: '/deploy/java.deploy.gitlab-ci.yml'
+
+variables:
+  REGISTRY_ADDRESS: 192.168.99.91:8080
+  REGISTRY_IMAGE_PULL_SECRETS: harbor-registry-secret
+  PROJECT_NAME: $CI_PROJECT_NAME
+  PROJECT_PATH: $CI_PROJECT_PATH
+
+build:
+  script:
+    - build.sh
+  artifacts:
+    untracked: true
+    expire_in: 1 hrs
+
+#package_api:
+#  variables:
+#    MODULE_NAME: lark-example-api
+#  extends: .package
+#  script:
+#    - export project_dir=$(pwd)
+#    - cd /$project_dir/$MODULE_NAME
+#    - package.sh
+#
+#deplo_api_playground:
+#  variables:
+#    MODULE_NAME: lark-example-api
+#    MODULE_TYPE: api（service/task/handler）
+#    INGRESS_HOST: api.foo.com（service.foo.com/task.foo.com/handler.foo.com）
+#    INGRESS_PATH: /$MODULE_NAME
+#    CONTAINER_PORT: 1001
+#  extends: .deploy-playground
+#  script:
+#    - deploy.sh

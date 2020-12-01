@@ -78,6 +78,7 @@ func NewProject() *app.Command {
 		files[filepath.Join(dir, "pom.xml")] = "project/pom.xml"
 		files[filepath.Join(dir, "README.md")] = "project/README.md"
 		files[filepath.Join(dir, ".gitignore")] = "project/gitignore"
+		files[filepath.Join(dir, ".gitlab-ci.yml")] = "project/gitlab-ci.yml"
 		if err = tpl.Execute(files, data); err != nil {
 			return err
 		}

@@ -11,18 +11,18 @@ lark:
 
 ---
 spring:
-  profiles: default
+  profiles: playground
   
   cloud:
     nacos:
       discovery:
-        server-addr: lark-dep-env.foo.com:8848
+        server-addr: 192.168.99.92:8848
 
   redis:
     redisson:
       config: |
         singleServerConfig:
-          address: redis://lark-dep-env.foo.com:6379
+          address: redis://192.168.99.92:6379
           password: 12345678
           subscriptionConnectionMinimumIdleSize: 10
           subscriptionConnectionPoolSize: 50
@@ -31,12 +31,12 @@ spring:
           database: 0
 
   datasource:
-    url: jdbc:mysql://lark-dep-env.foo.com:3306/demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.99.92:3306/demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: lark
     password: 12345678
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 rocketmq:
-  name-server: lark-dep-env.foo.com:9876
+  name-server: 192.168.99.92:9876
   producer:
     group: {{.ArtifactID}}
