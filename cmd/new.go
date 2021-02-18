@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/cuigh/auxo/app"
@@ -11,6 +12,7 @@ import (
 	"github.com/cuigh/auxo/config"
 	"github.com/cuigh/auxo/errors"
 	"github.com/cuigh/lark/tpl"
+	larkConfig "github.com/cuigh/lark/util/config"
 	"github.com/cuigh/lark/util/file"
 	"github.com/cuigh/lark/util/pom"
 )
@@ -39,6 +41,7 @@ func NewProject() *app.Command {
 		args := &struct {
 			Group    string `option:"group"`
 			Artifact string `option:"artifact"`
+			Port     string `option:"port"`
 		}{}
 		if err := config.Unmarshal(args); err != nil {
 			return err
@@ -68,9 +71,14 @@ func NewProject() *app.Command {
 			return errors.New("directory already exist: " + dir)
 		}
 
+		if args.Port == "" {
+			args.Port = "002"
+		}
+
 		data := map[string]string{
 			"GroupID":    args.Group,
 			"ArtifactID": args.Artifact,
+			"Port":       args.Port,
 		}
 
 		// create files
@@ -79,6 +87,7 @@ func NewProject() *app.Command {
 		files[filepath.Join(dir, "README.md")] = "project/README.md"
 		files[filepath.Join(dir, ".gitignore")] = "project/gitignore"
 		files[filepath.Join(dir, ".gitlab-ci.yml")] = "project/gitlab-ci.yml"
+		files[filepath.Join(dir, ".project.yml")] = "project/project.yml"
 		if err = tpl.Execute(files, data); err != nil {
 			return err
 		}
@@ -89,6 +98,7 @@ func NewProject() *app.Command {
 	cmd.Flags.Register(flag.Help)
 	cmd.Flags.String("group", "g", "", "group id")
 	cmd.Flags.String("artifact", "a", "", "artifact id")
+	cmd.Flags.String("port", "p", "", "port")
 	return cmd
 }
 
@@ -115,6 +125,14 @@ func NewModule(moduleType string) *app.Command {
 		if err != nil {
 			return err
 		}
+
+		//
+		conf, err := larkConfig.NewConfig(filepath.Join(wd, ".project.yml"))
+		if err != nil {
+			return err
+		}
+		//
+		fmt.Sprintf("group:[%v], artifact:[%v]", conf.GetConfigInfo().Group, conf.GetConfigInfo().Artifact)
 
 		// check args
 		var name string
@@ -173,8 +191,10 @@ func NewModule(moduleType string) *app.Command {
 		files[filepath.Join(moduleDir, "pom.xml")] = fp("pom.xml")
 		switch moduleType {
 		case "service":
+			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.Service)
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-service")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".service")
+			files[filepath.Join(moduleDir, "Dockerfile")] = fp("Dockerfile")
 			files[filepath.Join(moduleDir, "src", "main", "resources", "application.yml")] = fp("application.yml")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("Bootstrap.java").String()] = fp("Bootstrap.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("dao", "TestDao.java").String()] = fp("TestDao.java")
@@ -194,8 +214,10 @@ func NewModule(moduleType string) *app.Command {
 			data["ServiceName"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 
 		case "api":
+			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.Api)
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-api")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".api")
+			files[filepath.Join(moduleDir, "Dockerfile")] = fp("Dockerfile")
 			files[filepath.Join(moduleDir, "src", "main", "resources", "application.yml")] = fp("application.yml")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("Bootstrap.java").String()] = fp("Bootstrap.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("biz", "TestBiz.java").String()] = fp("TestBiz.java")
@@ -208,8 +230,10 @@ func NewModule(moduleType string) *app.Command {
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("iface", "TestApi.java").String()] = fp("TestApi.java")
 
 		case "msg-handler":
+			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.MsgHandler)
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-msg-handler")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".msg.handler")
+			files[filepath.Join(moduleDir, "Dockerfile")] = fp("Dockerfile")
 			files[filepath.Join(moduleDir, "src", "main", "resources", "application.yml")] = fp("application.yml")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("Bootstrap.java").String()] = fp("Bootstrap.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("executor", "TestExecutor.java").String()] = fp("TestExecutor.java")
@@ -220,14 +244,16 @@ func NewModule(moduleType string) *app.Command {
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".msg.contract")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("publisher", "TestPublisher.java").String()] = fp("TestPublisher.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("topic", "TestTopic.java").String()] = fp("TestTopic.java")
-			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("msg", "TestMessage.java").String()] = fp("TestMessage.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("message", "TestMessage.java").String()] = fp("TestMessage.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("handler", "TestHandler.java").String()] = fp("TestHandler.java")
-			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("config", "PublisherAutoConfiguration.java").String()] = fp("PublisherAutoConfiguration.java")
-			files[filepath.Join(moduleDir, "src", "main", "resources", "META-INF", "spring.factories")] = fp("spring.factories")
+			//files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("config", "PublisherAutoConfiguration.java").String()] = fp("PublisherAutoConfiguration.java")
+			//files[filepath.Join(moduleDir, "src", "main", "resources", "META-INF", "spring.factories")] = fp("spring.factories")
 
 		case "task":
+			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.Task)
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-task")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".task")
+			files[filepath.Join(moduleDir, "Dockerfile")] = fp("Dockerfile")
 			files[filepath.Join(moduleDir, "src", "main", "resources", "application.yml")] = fp("application.yml")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("Bootstrap.java").String()] = fp("Bootstrap.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("executor", "TestExecutor.java").String()] = fp("TestExecutor.java")

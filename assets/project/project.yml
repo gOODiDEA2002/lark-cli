@@ -1,0 +1,9 @@
+group: {{.GroupID}}
+artifact: {{.ArtifactID}}
+port:
+  api: 1{{.Port}}
+  admin-api: 2{{.Port}}
+  service: 3{{.Port}}
+  admin-service: 4{{.Port}}
+  msg-handler: 5{{.Port}}
+  task: 6{{.Port}}

@@ -1,12 +1,12 @@
 package {{.Package}}.executor;
 
-import {{.CleanPackage}}.msg.contract.msg.TestMessage;
+import {{.CleanPackage}}.msg.contract.message.TestMessage;
 import {{.CleanPackage}}.msg.contract.handler.TestHandler;
 import {{.CleanPackage}}.msg.contract.topic.TestTopic;
 import {{.Package}}.biz.TestBiz;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import lark.msg.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
  * testPublisher.createOrder( msg );
  */
 @Component
-@RocketMQMessageListener(topic = TestTopic.CREATE_ORDER, consumerGroup = "${message.test.consumer}")
 public class TestExecutor extends TestHandler {
     Logger log = LoggerFactory.getLogger( TestHandler.class );
 
@@ -27,7 +26,7 @@ public class TestExecutor extends TestHandler {
     TestBiz testBiz;
 
     @Override
-    public void onMessage(TestMessage msg ) {
+    public void process(TestMessage msg, Message raw ) {
         String result = testBiz.hello(msg.getUserId());
         log.info( ">>> CreateOrderMessage-:> orderId：{}, userId:{}, result:{}", msg.getOrderId(), msg.getUserId(), result );
     }

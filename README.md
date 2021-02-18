@@ -18,33 +18,34 @@ Admin-Api：2001 ~ 2999
 Service：3001 ~ 3999
 Admin-Service: 4001 ~ 4999
 Msg-Handler: 5001 ~ 3999
-Task: 6001 ~ 4999
+Task: 6001 ~ 6999
+Admin-Web: 7001 ~ 7999
 
 #eg:
 
 #快递自提点服务平台(express-package-self-pickup-site)
 
 #新建：项目
-lark new project -group techwis -artifact epsps-user epsps-user 
+lark new project -group techwis -artifact epsps-userEntity epsps-userEntity 
 
 #新建：Service & Contract
-lark new service -group techwis -artifact epsps-user-service service
-lark new service-contract -group techwis -artifact epsps-user-service-contract service-contract
-lark new service -group techwis -artifact epsps-user-admin-service admin-service
-lark new service-contract -group techwis -artifact epsps-user-admin-service-contract admin-service-contract
+lark new service -group techwis -artifact epsps-userEntity-service service
+lark new service-contract -group techwis -artifact epsps-userEntity-service-contract service-contract
+lark new service -group techwis -artifact epsps-userEntity-admin-service admin-service
+lark new service-contract -group techwis -artifact epsps-userEntity-admin-service-contract admin-service-contract
 
 #新建：Api & Contract
-lark new api -group techwis -artifact epsps-user-api api
-lark new api-contract -group techwis -artifact epsps-user-api-contract api-contract
-lark new api -group techwis -artifact epsps-user-admin-api api
-lark new api-contract -group techwis -artifact epsps-user-admin-api-contract admin-api-contract
+lark new api -group techwis -artifact epsps-userEntity-api api
+lark new api-contract -group techwis -artifact epsps-userEntity-api-contract api-contract
+lark new api -group techwis -artifact epsps-userEntity-admin-api api
+lark new api-contract -group techwis -artifact epsps-userEntity-admin-api-contract admin-api-contract
 
 #新建：Task
-lark new task -group techwis -artifact epsps-user-task task
+lark new task -group techwis -artifact epsps-userEntity-task task
 
 #新建：Msg Handler & Contract
-lark new msg-handler -group techwis -artifact epsps-user-msg-handler msg-handler
-lark new msg-contract -group techwis -artifact epsps-user-msg-contract msg-contract
+lark new msg-handler -group techwis -artifact epsps-userEntity-msg-handler msg-handler
+lark new msg-contract -group techwis -artifact epsps-userEntity-msg-contract msg-contract
 
 
 

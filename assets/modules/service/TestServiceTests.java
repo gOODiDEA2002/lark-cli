@@ -3,15 +3,14 @@ package {{.Package}};
 import {{.Package}}.contract.constant.TestType;
 import {{.Package}}.contract.dto.TestDto;
 import {{.Package}}.contract.iface.TestService;
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Bootstrap.class)
+@ActiveProfiles("playground")
 public class TestServiceTests {
     @Autowired
     private TestService testService;
@@ -22,6 +21,6 @@ public class TestServiceTests {
         request.setId(123);
 
         TestDto.HelloResponse response = testService.hello(request);
-        Assert.assertSame(TestType.GOOD, response.getType() );
+        Assertions.assertSame(TestType.GOOD, response.getType() );
     }
 }

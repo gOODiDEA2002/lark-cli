@@ -3,53 +3,18 @@ spring:
     name: {{.ArtifactID}}
 
 server:
-  port: 6001
-
-lark:
-  project:
-    type: task
+  port: {{.Port}}
 
 ---
 spring:
-  profiles: playground
+  config:
+    activate:
+      on-profile: playground
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.99.92:8848
+lark:
+  registry:
+    address: register-dev.lark-cloud.com:8848
 
-      config:
-        server-addr: 192.168.99.92:8848
-
-  redis:
-    redisson:
-      config: |
-        singleServerConfig:
-          address: redis://192.168.99.92:6379
-          password: 12345678
-          subscriptionConnectionMinimumIdleSize: 10
-          subscriptionConnectionPoolSize: 50
-          connectionMinimumIdleSize: 10
-          connectionPoolSize: 64
-          database: 0
-
-  datasource:
-    url: jdbc:mysql://192.168.99.92:3306/demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    username: lark
-    password: 12345678
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-xxl:
-  job:
-    admin:
-      addresses: http://192.168.99.92:8280/xxl-job-admin
-    executor:
-      appname: {{.ArtifactID}}
-      ip: 192.168.99.92
-      port: 9999
-      logretentiondays: 30
-
-rocketmq:
-  name-server: 192.168.99.92:9876
-  producer:
-    group: {{.ArtifactID}}
+  task:
+    address: http://schedule-dev.lark-cloud.com/xxl-job-admin
+    token: 12345678

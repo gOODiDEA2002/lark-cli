@@ -14,8 +14,8 @@ func main() {
 	tpl.SetBox(packr.NewBox("./assets"))
 
 	app.Name = "lark-cli"
-	app.Version = "0.9.1"
-	app.Desc = "A tool for developing lark based application"
+	app.Version = "1.5.0"
+	app.Desc = "A tool for developing lark-1.5 based application"
 	app.Action = cmd.Root
 	app.AddCommand(cmd.New())
 	app.AddCommand(cmd.Gen())

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <msd javaPackage="com.test.portal.service" version="1.0">
-    <service name="User" alias="" description="用户服务。">
+    <service name="lark.util.index.user.UserEntityy.User" alias="" description="用户服务。">
     </service>
     <types>
-        <type name="User" description="用户">
+        <type name="lark.util.index.user.UserEntityy.User" description="用户">
             <field type="int32" name="Id" order="1" description="用户 ID"/>
             <field type="int32" name="Name" order="2" description="用户名称"/>
             <field type="bool" name="Admin" order="3" description="是否是超级管理员"/>

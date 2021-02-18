@@ -4,35 +4,83 @@ include:
   - project: 'devops/ci-templates'
     file: '/deploy/java.deploy.gitlab-ci.yml'
 
-variables:
-  REGISTRY_ADDRESS: 192.168.99.91:8080
-  REGISTRY_IMAGE_PULL_SECRETS: harbor-registry-secret
-  PROJECT_NAME: $CI_PROJECT_NAME
-  PROJECT_PATH: $CI_PROJECT_PATH
-
 build:
-  script:
-    - build.sh
-  artifacts:
-    untracked: true
-    expire_in: 1 hrs
+  extends:
+    - .playground
+    - .build
 
-#package_api:
-#  variables:
-#    MODULE_NAME: lark-example-api
-#  extends: .package
-#  script:
-#    - export project_dir=$(pwd)
-#    - cd /$project_dir/$MODULE_NAME
-#    - package.sh
-#
-#deplo_api_playground:
-#  variables:
-#    MODULE_NAME: lark-example-api
-#    MODULE_TYPE: api（service/task/handler）
-#    INGRESS_HOST: api.foo.com（service.foo.com/task.foo.com/handler.foo.com）
-#    INGRESS_PATH: /$MODULE_NAME
-#    CONTAINER_PORT: 1001
-#  extends: .deploy-playground
-#  script:
-#    - deploy.sh
+### Api
+# package_api:
+#   extends:
+#     - .playground
+#     - .package
+#   variables:
+#     MODULE_NAME: lark-example-api
+
+# deploy_api_playground:
+#   extends:
+#     - .playground
+#     - .deploy_playground
+#   variables:
+#     MODULE_NAME: lark-example-api
+#     MODULE_TYPE: api
+#     INGRESS_HOST: api.lark-cloud.com
+#     INGRESS_PATH: /$MODULE_NAME
+#     CONTAINER_PORT: 1001
+
+### Service
+# package_service:
+#   extends:
+#     - .playground
+#     - .package
+#   variables:
+#     MODULE_NAME: lark-example-service
+
+# deploy_service_playground:
+#   extends:
+#     - .playground
+#     - .deploy_playground
+#   variables:
+#     MODULE_NAME: lark-example-service
+#     MODULE_TYPE: service
+#     INGRESS_HOST: service.lark-cloud.com
+#     INGRESS_PATH: /$MODULE_NAME
+#     CONTAINER_PORT: 3001
+
+### Msg
+# package_msg:
+#   extends:
+#     - .playground
+#     - .package
+#   variables:
+#     MODULE_NAME: lark-example-msg-handler
+
+# deploy_msg_playground:
+#   extends:
+#     - .playground
+#     - .deploy_playground
+#   variables:
+#     MODULE_NAME: lark-example-msg-handler
+#     MODULE_TYPE: msg-handler
+#     INGRESS_HOST: handler.lark-cloud.com
+#     INGRESS_PATH: /$MODULE_NAME
+#     CONTAINER_PORT: 5001
+
+### Task
+# package_task:
+#   extends:
+#     - .playground
+#     - .package
+#   variables:
+#     MODULE_NAME: lark-example-task
+
+# deploy_task_playground:
+#   extends:
+#     - .playground
+#     - .deploy_playground
+#   variables:
+#     MODULE_NAME: lark-example-task
+#     MODULE_TYPE: task
+#     INGRESS_HOST: task.lark-cloud.com
+#     INGRESS_PATH: /$MODULE_NAME
+#     CONTAINER_PORT: 6001

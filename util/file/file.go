@@ -2,6 +2,7 @@ package file
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -47,4 +48,17 @@ func CreateDir(dirs ...string) error {
 		}
 	}
 	return nil
+}
+
+// Get 获取文件内容
+func Get(filename string) ([]byte, error) {
+	if NotExist(filename) {
+		return nil, fmt.Errorf("file [%v] not exist", filename)
+	}
+	//
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("read file [%v] failed: %v", filename, err)
+	}
+	return content, nil
 }

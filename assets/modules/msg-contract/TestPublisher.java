@@ -1,19 +1,19 @@
 package {{.Package}}.publisher;
 
-import {{.Package}}.msg.TestMessage;
+import {{.Package}}.message.TestMessage;
 import {{.Package}}.topic.TestTopic;
-import lark.util.msg.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lark.msg.Publisher;
 
-@Component
 public class TestPublisher {
 
-    @Autowired
-    MessageService messageService;
+    private Publisher publisher;
 
-    public boolean createOrder(TestMessage orderMsg ) {
-        return messageService.send( TestTopic.CREATE_ORDER, orderMsg );
+    public TestPublisher( Publisher publisher ) {
+        this.publisher = publisher;
+    }
+
+    public void createOrder(TestMessage orderMessage ) {
+        publisher.publish( TestTopic.CREATE_ORDER, orderMessage );
     }
 
 }

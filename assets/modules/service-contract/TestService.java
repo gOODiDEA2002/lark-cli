@@ -13,5 +13,5 @@ public interface TestService {
 	 * 测试
 	**/
 	@PostMapping(value = "/hello.srv")
-	HelloResponse hello(HelloRequest request);
+	HelloResponse hello(@RequestBody HelloRequest request);
 }

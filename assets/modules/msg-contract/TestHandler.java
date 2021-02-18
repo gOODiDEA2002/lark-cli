@@ -1,10 +1,11 @@
 package {{.Package}}.handler;
 
-import {{.Package}}.msg.TestMessage;
-import org.apache.rocketmq.spring.core.RocketMQListener;
+import {{.Package}}.message.TestMessage;
+import {{.Package}}.topic.TestTopic;
+import lark.msg.AbstractHandler;
+import lark.msg.MsgHandler;
 
-public abstract class TestHandler implements RocketMQListener<TestMessage> {
+@MsgHandler(topic = TestTopic.CREATE_ORDER, threads = 2)
+public abstract class TestHandler extends AbstractHandler<TestMessage> {
 
-    @Override
-    public abstract void onMessage(TestMessage orderMsg );
 }

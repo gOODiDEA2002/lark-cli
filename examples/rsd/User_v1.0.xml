@@ -16,7 +16,7 @@
         alias: 服务别名, 如果指定, 则调用服务时会传递别名到服务端
         description: 服务描述
     -->
-    <service name="User" alias="" description="用户服务。" invoke="FailFast">
+    <service name="lark.util.index.user.UserEntityy.User" alias="" description="用户服务。" invoke="FailFast">
         <!--生成的服务接口需要额外引入的包路径-->
         <imports>
             <!--
@@ -62,7 +62,7 @@
                 <field modifier="required" type="int32" name="Id" order="1" description="用户 ID"/>
             </request>
             <response multiple="true">
-                <field type="User" name="User"/>
+                <field type="lark.util.index.user.UserEntityy.User" name="lark.util.index.user.UserEntityy.User"/>
             </response>
         </method>        
         <method name="FindUsers" description="查找用户">
@@ -77,9 +77,9 @@
             <!--响应参数
                 extends: 基类, 泛型参数请使用方括号括起来
             -->
-            <response extends="PageList[User]">
+            <response extends="PageList[lark.util.index.user.UserEntityy.User]">
                 <field modifier="required" type="int32" name="TotalCount" order="1" description="总页数" inherits="true"/>
-                <field modifier="repeated" type="User" name="Items" order="2" kind="message" inherits="true"/>
+                <field modifier="repeated" type="lark.util.index.user.UserEntityy.User" name="Items" order="2" kind="message" inherits="true"/>
             </response>
         </method>
     </service>
@@ -101,7 +101,7 @@
             name: 类型名称
             description: 类型描述
         -->
-        <type name="User" description="用户">
+        <type name="lark.util.index.user.UserEntityy.User" description="用户">
             <!--字段定义
                 modifier: 修饰符, 有效值: required/optional/repeated
                 type: 字段类型

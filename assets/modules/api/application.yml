@@ -3,40 +3,18 @@ spring:
     name: {{.ArtifactID}}
 
 server:
-  port: 1001
+  port: {{.Port}}
 
 lark:
-  project:
+  project: 
     type: api
-
+    
 ---
 spring:
-  profiles: playground
-  
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.99.92:8848
+  config:
+    activate:
+      on-profile: playground
 
-  redis:
-    redisson:
-      config: |
-        singleServerConfig:
-          address: redis://192.168.99.92:6379
-          password: 12345678
-          subscriptionConnectionMinimumIdleSize: 10
-          subscriptionConnectionPoolSize: 50
-          connectionMinimumIdleSize: 10
-          connectionPoolSize: 64
-          database: 0
-
-  datasource:
-    url: jdbc:mysql://192.168.99.92:3306/demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    username: lark
-    password: 12345678
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-rocketmq:
-  name-server: 192.168.99.92:9876
-  producer:
-    group: {{.ArtifactID}}
+lark:
+  registry:
+    address: register-dev.lark-cloud.com:8848

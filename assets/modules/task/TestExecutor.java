@@ -1,24 +1,23 @@
 package {{.Package}}.executor;
 
 import {{.Package}}.biz.TestBiz;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.handler.annotation.XxlJob;
-import com.xxl.job.core.log.XxlJobLogger;
+import lark.task.Executor;
+import lark.task.Task;
+import lark.task.TaskContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TestExecutor {
+public class TestExecutor implements Executor {
     @Autowired
     TestBiz testBiz;
 
-    @XxlJob("TestHandler")
-    public ReturnT<String> testHandler(String param) throws Exception {
+    @Override
+    public void execute(TaskContext ctx) {
         int[] userIds = new int[]{123,1,0,124};
-        for (int i = 0, count = userIds.length; i < count; i++) {
-            String result = testBiz.hello( userIds[i] );
-            XxlJobLogger.log("result:{}", result );
+        for ( int userId : userIds ) {
+            String userName = testBiz.hello( userId );
+            ctx.info( "===> UserId: {}, UserName: {}", userId, userName );
         }
-        return ReturnT.SUCCESS;
     }
 }

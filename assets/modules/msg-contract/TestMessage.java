@@ -1,4 +1,4 @@
-package {{.Package}}.msg;
+package {{.Package}}.message;
 
 import lombok.*;
 
@@ -7,5 +7,5 @@ import lombok.*;
 @EqualsAndHashCode
 public class TestMessage {
     private long orderId;
-    int userId;
+    private int userId;
 }
