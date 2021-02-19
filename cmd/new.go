@@ -28,6 +28,10 @@ func New() *app.Command {
 	cmd.AddCommand(NewModule("service-contract"))
 	cmd.AddCommand(NewModule("api"))
 	cmd.AddCommand(NewModule("api-contract"))
+	cmd.AddCommand(NewModule("admin-service"))
+	cmd.AddCommand(NewModule("admin-service-contract"))
+	cmd.AddCommand(NewModule("admin-api"))
+	cmd.AddCommand(NewModule("admin-api-contract"))
 	cmd.AddCommand(NewModule("msg-contract"))
 	cmd.AddCommand(NewModule("msg-handler"))
 	cmd.AddCommand(NewModule("task"))
@@ -131,19 +135,16 @@ func NewModule(moduleType string) *app.Command {
 		if err != nil {
 			return err
 		}
-		//
-		fmt.Sprintf("group:[%v], artifact:[%v]", conf.GetConfigInfo().Group, conf.GetConfigInfo().Artifact)
 
 		// check args
-		var name string
+		var dirname string
 		if len(ctx.Args()) == 0 {
-			if p == nil {
-				return fmt.Errorf("module name is missing")
-			}
-			name = fmt.Sprintf("%v-%v", p.GetArtifactID(), moduleType)
+			return fmt.Errorf("module name is missing")
 		} else {
-			name = ctx.Args()[0]
+			dirname = ctx.Args()[0]
 		}
+
+		name := fmt.Sprintf("%v-%v", p.GetArtifactID(), dirname)
 
 		// build template data
 		if args.Group == "" && p != nil {
@@ -203,7 +204,30 @@ func NewModule(moduleType string) *app.Command {
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("impl", "TestServiceImpl.java").String()] = fp("TestServiceImpl.java")
 			files[file.NewPath(moduleDir, "src", "test", "java").Join(strings.Split(args.Package, ".")...).Join("TestServiceTests.java").String()] = fp("TestServiceTests.java")
 
+		case "admin-service":
+			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.AdminService)
+			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-service")
+			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".service")
+			files[filepath.Join(moduleDir, "Dockerfile")] = fp("Dockerfile")
+			files[filepath.Join(moduleDir, "src", "main", "resources", "application.yml")] = fp("application.yml")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("Bootstrap.java").String()] = fp("Bootstrap.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("dao", "TestDao.java").String()] = fp("TestDao.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("biz", "TestBiz.java").String()] = fp("TestBiz.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("entity", "TestObject.java").String()] = fp("TestObject.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("impl", "TestServiceImpl.java").String()] = fp("TestServiceImpl.java")
+			files[file.NewPath(moduleDir, "src", "test", "java").Join(strings.Split(args.Package, ".")...).Join("TestServiceTests.java").String()] = fp("TestServiceTests.java")
+
 		case "service-contract":
+			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
+			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".contract")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("constant", "TestType.java").String()] = fp("TestType.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("dto", "TestDto.java").String()] = fp("TestDto.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("iface", "TestService.java").String()] = fp("TestService.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("config", "ServiceAutoConfiguration.java").String()] = fp("ServiceAutoConfiguration.java")
+			files[filepath.Join(moduleDir, "src", "main", "resources", "META-INF", "spring.factories")] = fp("spring.factories")
+			data["ServiceName"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
+
+		case "admin-service-contract":
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".contract")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("constant", "TestType.java").String()] = fp("TestType.java")
@@ -223,7 +247,23 @@ func NewModule(moduleType string) *app.Command {
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("biz", "TestBiz.java").String()] = fp("TestBiz.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("controller", "TestController.java").String()] = fp("TestController.java")
 
+		case "admin-api":
+			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.AdminApi)
+			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-api")
+			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".api")
+			files[filepath.Join(moduleDir, "Dockerfile")] = fp("Dockerfile")
+			files[filepath.Join(moduleDir, "src", "main", "resources", "application.yml")] = fp("application.yml")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("Bootstrap.java").String()] = fp("Bootstrap.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("biz", "TestBiz.java").String()] = fp("TestBiz.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("controller", "TestController.java").String()] = fp("TestController.java")
+
 		case "api-contract":
+			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
+			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".contract")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("vo", "TestVo.java").String()] = fp("TestVo.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("iface", "TestApi.java").String()] = fp("TestApi.java")
+
+		case "admin-api-contract":
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".contract")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("vo", "TestVo.java").String()] = fp("TestVo.java")
@@ -263,6 +303,7 @@ func NewModule(moduleType string) *app.Command {
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("controller", "TestController.java").String()] = fp("TestController.java")
 			files[file.NewPath(moduleDir, "src", "test", "java").Join(strings.Split(args.Package, ".")...).Join("executor", "TestControllerTests.java").String()] = fp("TestControllerTests.java")
 		}
+		//
 		if err = tpl.Execute(files, data); err != nil {
 			return err
 		}

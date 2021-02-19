@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: {{.ArtifactID}}
+
+server:
+  port: {{.Port}}
+
+lark:
+  project: 
+    type: api
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+---
+spring:
+  config:
+    activate:
+      on-profile: playground
+
+lark:
+  registry:
+    address: register-dev.lark-cloud.com:8848
