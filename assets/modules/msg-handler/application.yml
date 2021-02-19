@@ -5,6 +5,15 @@ spring:
 server:
   port: {{.Port}}
 
+lark:
+  project: 
+    type: msg-handler
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
 ---
 spring:
   config:

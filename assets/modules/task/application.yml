@@ -5,6 +5,15 @@ spring:
 server:
   port: {{.Port}}
 
+lark:
+  project:
+    type: task
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
 ---
 spring:
   config:
