@@ -92,6 +92,7 @@ func NewProject() *app.Command {
 		files[filepath.Join(dir, ".gitignore")] = "project/gitignore"
 		files[filepath.Join(dir, ".gitlab-ci.yml")] = "project/gitlab-ci.yml"
 		files[filepath.Join(dir, ".project.yml")] = "project/project.yml"
+		files[filepath.Join(dir, "CMD.md")] = "project/CMD.md"
 		if err = tpl.Execute(files, data); err != nil {
 			return err
 		}
@@ -140,9 +141,8 @@ func NewModule(moduleType string) *app.Command {
 		var dirname string
 		if len(ctx.Args()) == 0 {
 			return fmt.Errorf("module name is missing")
-		} else {
-			dirname = ctx.Args()[0]
 		}
+		dirname = ctx.Args()[0]
 
 		name := fmt.Sprintf("%v-%v", p.GetArtifactID(), dirname)
 
@@ -167,7 +167,7 @@ func NewModule(moduleType string) *app.Command {
 		}
 
 		// check dir exist
-		moduleDir := filepath.Join(wd, name)
+		moduleDir := filepath.Join(wd, dirname)
 		_, err = os.Stat(moduleDir)
 		if err == nil {
 			return fmt.Errorf("directory already exist: %v", moduleDir)
@@ -176,11 +176,11 @@ func NewModule(moduleType string) *app.Command {
 		// create empty dirs
 		var dirs []string
 		if moduleType == "web" {
-			dirs = append(dirs, filepath.Join(wd, name, "src", "main", "resources", "view"))
-			dirs = append(dirs, filepath.Join(wd, name, "src", "main", "resources", "static", "js"))
-			dirs = append(dirs, filepath.Join(wd, name, "src", "main", "resources", "static", "css"))
+			dirs = append(dirs, filepath.Join(wd, dirname, "src", "main", "resources", "view"))
+			dirs = append(dirs, filepath.Join(wd, dirname, "src", "main", "resources", "static", "js"))
+			dirs = append(dirs, filepath.Join(wd, dirname, "src", "main", "resources", "static", "css"))
 		}
-		dirs = append(dirs, filepath.Join(wd, name, "src", "test", "java"))
+		dirs = append(dirs, filepath.Join(wd, dirname, "src", "test", "java"))
 		file.CreateDir(dirs...)
 
 		fp := func(name string) string {
@@ -310,7 +310,7 @@ func NewModule(moduleType string) *app.Command {
 
 		// modify files
 		if p != nil {
-			p.AddModule(name)
+			p.AddModule(dirname)
 		}
 
 		fmt.Println("finished.")
