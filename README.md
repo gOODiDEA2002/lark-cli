@@ -4,37 +4,45 @@ A tool for developing [lark](https://github.com/cuigh/lark) based applications.
 
 ## Usage
 
-    lark new project -group groupName -artifact artifactName -port portSuffix projectDirname
-    lark new moduleType moduleDirName
-    ...
     lark -h
 
+- create project
+
+```bash    
+lark new project -group groupName -artifact artifactName -port portSuffix projectDirname
+```
+- create module 
+
+```bash  
+lark new moduleType moduleDirName
+```
+- example
 ```bash
-# station project
+# new project
 lark new project -group groupName -artifact artifactName -port 100 site
 
 cd groupName
-# api
+# new api
 lark new api-contract api-contract
 lark new api api
 
-# admin-api
+# new admin-api
 lark new admin-api-contract admin-api-contract
 lark new admin-api admin-api
 
-# service
+# new service
 lark new service-contract service-contract
 lark new service service
 
-# admin-service
+# new admin-service
 lark new admin-service-contract admin-service-contract
 lark new admin-service admin-service
 
-# msg
+# new msg
 lark new msg-contract msg-contract
 lark new msg-handler  msg-handler
 
-# task
+# new task
 lark new task task
 
 ```
@@ -44,10 +52,10 @@ lark new task task
 You need Go v1.11+ and [packr](https://github.com/gobuffalo/packr) v1 to build **lark-cli**
 
     packr build
-
+    
     packr install
 
-* 多平台构建
+* for linux & win
 ```bash
 GOOS=darwin GOARCH=amd64 packr build && mv lark release/mac/lark \
   && GOOS=linux GOARCH=amd64 packr build && mv lark release/linux/lark \
