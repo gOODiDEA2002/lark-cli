@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 测试服务
 **/
-@RestController
-@RequestMapping("/test")
+@RpcService
 public interface TestService {
 	/**
 	 * 测试
 	**/
-	@PostMapping(value = "/hello.srv")
-	HelloResponse hello(@RequestBody HelloRequest request);
+	@RpcMethod
+	HelloResponse hello(HelloRequest request);
 }

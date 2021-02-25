@@ -20,10 +20,17 @@ java -jar service/target/{{.ArtifactID}}-service-1.0.0-SNAPSHOT.jar --spring.pro
 ```
 * 本地访问
 ```bash
-curl --location --request POST 'http://127.0.0.1:3{{.Port}}/test/hello.srv' \
+curl --location --request POST 'http://127.0.0.1:3{{.Port}}/lark/TestService/hello' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-"id": 123
+        "service": "TestService",
+	"method": "Hello",
+	"args": [
+		{
+			"type": 150,
+			"data": "{\"id\":123,\"type\":\"GOOD\"}"
+		}
+	]
 }'
 ```
 
