@@ -1,16 +1,17 @@
 package {{.Package}}.iface;
 
 import {{.Package}}.dto.TestDto.*;
-import org.springframework.web.bind.annotation.*;
+import lark.net.rpc.annotation.RpcMethod;
+import lark.net.rpc.annotation.RpcService;
 
 /**
  * 测试服务
 **/
-@RpcService
+@RpcService(description = "测试服务")
 public interface TestService {
 	/**
 	 * 测试
 	**/
-	@RpcMethod
+	@RpcMethod(description = "测试")
 	HelloResponse hello(HelloRequest request);
 }
