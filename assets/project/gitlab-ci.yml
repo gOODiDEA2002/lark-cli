@@ -15,6 +15,7 @@ build:
 #     - .playground
 #     - .package
 #   variables:
+#     MODULE_FOLDER_NAME: api
 #     MODULE_NAME: lark-example-api
 
 # deploy_api_playground:
@@ -34,6 +35,7 @@ build:
 #     - .playground
 #     - .package
 #   variables:
+#     MODULE_FOLDER_NAME: service
 #     MODULE_NAME: lark-example-service
 
 # deploy_service_playground:
@@ -53,6 +55,7 @@ build:
 #     - .playground
 #     - .package
 #   variables:
+#     MODULE_FOLDER_NAME: msg-handler
 #     MODULE_NAME: lark-example-msg-handler
 
 # deploy_msg_playground:
@@ -72,6 +75,7 @@ build:
 #     - .playground
 #     - .package
 #   variables:
+#     MODULE_FOLDER_NAME: task
 #     MODULE_NAME: lark-example-task
 
 # deploy_task_playground:
