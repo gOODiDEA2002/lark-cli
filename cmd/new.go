@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/cuigh/auxo/app"
 	"github.com/cuigh/auxo/app/flag"
@@ -220,22 +221,24 @@ func NewModule(moduleType string) *app.Command {
 		case "service-contract":
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".contract")
+			data["ServiceName"] = pascal(data["CleanArtifactID"])
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("constant", "TestType.java").String()] = fp("TestType.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("dto", "TestDto.java").String()] = fp("TestDto.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("iface", "TestService.java").String()] = fp("TestService.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("config", "ServiceAutoConfiguration.java").String()] = fp("ServiceAutoConfiguration.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join(data["ServiceName"]+"Manager.java").String()] = fp("ServiceManager.java")
 			files[filepath.Join(moduleDir, "src", "main", "resources", "META-INF", "spring.factories")] = fp("spring.factories")
-			data["ServiceName"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 
 		case "admin-service-contract":
 			data["CleanArtifactID"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 			data["CleanPackage"] = strings.TrimSuffix(data["Package"], ".contract")
+			data["ServiceName"] = pascal(data["CleanArtifactID"])
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("constant", "TestType.java").String()] = fp("TestType.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("dto", "TestDto.java").String()] = fp("TestDto.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("iface", "TestService.java").String()] = fp("TestService.java")
 			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join("config", "ServiceAutoConfiguration.java").String()] = fp("ServiceAutoConfiguration.java")
+			files[file.NewPath(moduleDir, "src", "main", "java").Join(strings.Split(args.Package, ".")...).Join(data["ServiceName"]+"Manager.java").String()] = fp("ServiceManager.java")
 			files[filepath.Join(moduleDir, "src", "main", "resources", "META-INF", "spring.factories")] = fp("spring.factories")
-			data["ServiceName"] = strings.TrimSuffix(data["ArtifactID"], "-contract")
 
 		case "api":
 			data["Port"] = strconv.Itoa(conf.GetConfigInfo().Port.Api)
@@ -322,3 +325,25 @@ func NewModule(moduleType string) *app.Command {
 	cmd.Flags.String("package", "p", "", "package")
 	return cmd
 }
+
+func pascal(artifactID string) string {
+	parts := strings.Split(artifactID, "-")
+	for i := 0; i < len(parts); i++ {
+		parts[i] = pascalWord(parts[i])
+	}
+	return strings.Join(parts, "")
+}
+
+func pascalWord(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
+// func camel(str string) string {
+// 	for i, v := range str {
+// 		return string(unicode.ToLower(v)) + str[i+1:]
+// 	}
+// 	return ""
+// }
